@@ -1,0 +1,8 @@
+example.com:53 {
+    file /root/example.db {
+        reload 30s
+    }
+    log
+    errors
+    auto
+}
