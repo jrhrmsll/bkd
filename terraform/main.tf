@@ -13,7 +13,7 @@ locals {
     for entry in local.entries :
     jsonencode({
       version     = local.version
-      name        = trimsuffix(join("", [entry.name, entry.zone]), ".")
+      url        = trimsuffix(join("", [entry.name, entry.zone]), ".")
       description = entry.description
       tags        = entry.tags
       mode        = "auto"

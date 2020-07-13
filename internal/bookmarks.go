@@ -2,7 +2,6 @@ package internal
 
 type Bookmark struct {
 	Version     string            `json:"version"`
-	Name        string            `json:"name"`
 	Description string            `json:"description"`
 	URL         string            `json:"url"`
 	Tags        map[string]string `json:"tags"`
