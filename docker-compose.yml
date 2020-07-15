@@ -1,0 +1,26 @@
+version: '3.2'
+
+services:
+  coredns:
+    image: coredns/coredns:1.7.0
+    ports:
+      - "53:53/udp"
+    volumes:
+      - ./coredns:/root
+    command: -conf root/corefile
+
+  db:
+    image: mongo:3.6.18-xenial
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+
+  bkd:
+    image: bkd:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - MONGODB_URI=mongodb://db:27017/
