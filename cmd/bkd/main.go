@@ -64,10 +64,10 @@ func main() {
 	}
 
 	// API
-	bookmarkRepository := mongodb.NewBookmarksRepository(ctx, mgo, logger)
-	bookmarkController := http.NewBookmarkController(ctx, bookmarkRepository, logger)
+	bookmarksRepository := mongodb.NewBookmarksRepository(ctx, mgo, logger)
+	bookmarksController := http.NewBookmarkController(ctx, bookmarksRepository, logger)
 
-	bkd := http.NewAPI(ctx, logger, bookmarkController)
+	bkd := http.NewAPI(ctx, logger, bookmarksController)
 	app.Add(bkd.Execute, bkd.Interrupt)
 
 	err = app.Run()

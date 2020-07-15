@@ -10,24 +10,24 @@ import (
 	"bookmarks/internal"
 )
 
-type BookmarkController struct {
+type BookmarksController struct {
 	ctx                context.Context
-	bookmarkRepository internal.BookmarkRepository
+	bookmarkRepository internal.BookmarksRepository
 	logger             *log.Logger
 }
 
 func NewBookmarkController(
 	ctx context.Context,
-	bookmarkRepository internal.BookmarkRepository,
-	logger *log.Logger) *BookmarkController {
-	return &BookmarkController{
+	bookmarkRepository internal.BookmarksRepository,
+	logger *log.Logger) *BookmarksController {
+	return &BookmarksController{
 		ctx:                ctx,
 		bookmarkRepository: bookmarkRepository,
 		logger:             logger,
 	}
 }
 
-func (controller *BookmarkController) Index(c echo.Context) error {
+func (controller *BookmarksController) Index(c echo.Context) error {
 	bookmarks, err := controller.bookmarkRepository.Find()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
@@ -36,7 +36,7 @@ func (controller *BookmarkController) Index(c echo.Context) error {
 	return c.JSON(http.StatusOK, bookmarks)
 }
 
-func (controller *BookmarkController) Create(c echo.Context) error {
+func (controller *BookmarksController) Create(c echo.Context) error {
 	var bookmark = new(internal.Bookmark)
 
 	if err := c.Bind(bookmark); err != nil {
@@ -51,7 +51,7 @@ func (controller *BookmarkController) Create(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
-func (controller *BookmarkController) Delete(c echo.Context) error {
+func (controller *BookmarksController) Delete(c echo.Context) error {
 	var version = new(struct {
 		Version string `json:"version"`
 	})

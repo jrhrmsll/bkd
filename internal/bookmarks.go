@@ -8,7 +8,7 @@ type Bookmark struct {
 	Mode        string            `json:"mode"`
 }
 
-type BookmarkRepository interface {
+type BookmarksRepository interface {
 	Find() ([]*Bookmark, error)
 	Store(bookmark *Bookmark) (string, error)
 	Delete(version string) (bool, error)

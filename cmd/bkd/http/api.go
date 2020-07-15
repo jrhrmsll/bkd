@@ -18,7 +18,7 @@ type API struct {
 func NewAPI(
 	ctx context.Context,
 	logger *log.Logger,
-	bookmarkController *BookmarkController,
+	bookmarksController *BookmarksController,
 ) *API {
 	handler := echo.New()
 
@@ -28,9 +28,9 @@ func NewAPI(
 	handler.Use(middleware.CORS())
 
 	// Routes
-	handler.GET("/bookmarks", bookmarkController.Index).Name = "bookmarks.index"
-	handler.POST("/bookmarks", bookmarkController.Create).Name = "bookmarks.create"
-	handler.DELETE("/bookmarks", bookmarkController.Delete).Name = "bookmarks.delete"
+	handler.GET("/bookmarks", bookmarksController.Index).Name = "bookmarks.index"
+	handler.POST("/bookmarks", bookmarksController.Create).Name = "bookmarks.create"
+	handler.DELETE("/bookmarks", bookmarksController.Delete).Name = "bookmarks.delete"
 
 	return &API{
 		ctx: ctx,
