@@ -1,26 +1,15 @@
 locals {
-  bookmarks_service = "http://localhost:8080/bookmarks"
-  content_type = "Content-Type: application/json"
+  bookmarks_service_url = "http://localhost:8080/bookmarks"
+  content_type          = "Content-Type: application/json"
 
   version = formatdate("YYMMhhmmss", timestamp())
 
-  records = [
-    for entry in local.entries :
-    join(" ", [join("", [entry.name, entry.zone]), "IN", "A", join(" ", entry.addresses)])
-  ]
-
-  update_payloads = [
-    for entry in local.entries :
-    jsonencode({
-      version     = local.version
-      url        = trimsuffix(join("", [entry.name, entry.zone]), ".")
-      description = entry.description
-      tags        = entry.tags
-      mode        = "auto"
-    })
-  ]
-
-  cleanup_payload = jsonencode({ version = local.version })
+  records = flatten([
+    for entry in local.entries : [
+      for address in entry.addresses :
+      join(" ", [join("", [entry.name, entry.zone]), "IN", "A", address])
+    ]
+  ])
 }
 
 data "template_file" "zone_db_tpl" {
@@ -37,6 +26,19 @@ resource "local_file" "zone_db" {
   filename = "${path.module}/../coredns/example.db"
 }
 
+locals {
+  update_payloads = [
+    for entry in local.entries :
+    jsonencode({
+      version     = local.version
+      url         = trimsuffix(join("", [entry.name, entry.zone]), ".")
+      description = entry.description
+      tags        = entry.tags
+      mode        = "auto"
+    })
+  ]
+}
+
 resource "null_resource" "bookmarks_update" {
   count = length(local.update_payloads)
 
@@ -45,20 +47,22 @@ resource "null_resource" "bookmarks_update" {
   }
 
   provisioner "local-exec" {
-    command = "curl -d '${local.update_payloads[count.index]}' -H '${local.content_type}' -X POST ${local.bookmarks_service}"
+    command = "curl -d '${local.update_payloads[count.index]}' -H '${local.content_type}' -X POST ${local.bookmarks_service_url}"
   }
 }
 
+locals {
+  cleanup_payload = jsonencode({ version = local.version })
+}
+
 resource "null_resource" "bookmarks_cleanup" {
-  depends_on = [
-    null_resource.bookmarks_update
-  ]
+  depends_on = [null_resource.bookmarks_update]
 
   triggers = {
     db = local.version
   }
 
   provisioner "local-exec" {
-    command = "curl -d '${local.cleanup_payload}' -H '${local.content_type}' -X DELETE ${local.bookmarks_service}"
+    command = "curl -d '${local.cleanup_payload}' -H '${local.content_type}' -X DELETE ${local.bookmarks_service_url}"
   }
 }

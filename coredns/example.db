@@ -1,5 +1,7 @@
-example.com. IN SOA dns.example.com. admin.example.com. 2007181255 7200 3600 1209600 3600
+example.com. IN SOA dns.example.com. admin.example.com. 2007080700 7200 3600 1209600 3600
 dns.example.com. IN A 10.10.1.1
 nexus.example.com. IN A 10.10.1.2
 bookmarks.example.com. IN A 10.10.1.5
+bookmarks.example.com. IN A 10.10.1.6
+bookmarks.example.com. IN A 10.10.1.7
 crm.example.com. IN A 10.10.1.10

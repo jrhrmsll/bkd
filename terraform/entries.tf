@@ -21,7 +21,7 @@ locals {
     {
       zone      = ".example.com."
       name      = "bookmarks"
-      addresses = ["10.10.1.5"]
+      addresses = ["10.10.1.5", "10.10.1.6", "10.10.1.7"]
       tags = {
         team = "devs"
       }
