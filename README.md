@@ -38,3 +38,5 @@ terraform init
 terraform plan -out output.plan
 terraform apply output.plan
 ```
+
+To check the changes do a request to the [bookmarks list](http://localhost:8080/bookmarks).
