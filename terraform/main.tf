@@ -42,6 +42,8 @@ locals {
 resource "null_resource" "bookmarks_update" {
   count = length(local.update_payloads)
 
+  depends_on = [local_file.zone_db]
+
   triggers = {
     db = local.version
   }
