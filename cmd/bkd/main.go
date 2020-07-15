@@ -16,17 +16,25 @@ import (
 	"bookmarks/internal/repository/mongodb"
 )
 
-const (
-	mongoDBURI     = "mongodb://localhost:27017"
-	mongoDBTimeout = "10s"
-)
-
 func main() {
+	var (
+		ok             bool
+		mongoDBURI     string
+		mongoDBTimeout string
+	)
+
 	ctx := context.Background()
 
 	logger := log.New(os.Stdout, "INFO: ", log.LstdFlags|log.Lmicroseconds|log.Lshortfile)
-
 	logger.Println("Starting Bookmark Service")
+
+	if mongoDBURI, ok = os.LookupEnv("MONGODB_URI"); !ok {
+		mongoDBURI = "mongodb://localhost:27017/"
+	}
+
+	if mongoDBTimeout, ok = os.LookupEnv("MONGODB_TIMEOUT"); !ok {
+		mongoDBTimeout = "30s"
+	}
 
 	app := run.Group{}
 	app.Add(run.SignalHandler(ctx, os.Interrupt, os.Kill, syscall.SIGTERM))
